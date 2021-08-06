@@ -1,19 +1,23 @@
 package net.diegoqueres.myflappybird;
 
+import static net.diegoqueres.myflappybird.Constantes.passaroIniX;
+import static net.diegoqueres.myflappybird.Constantes.screenY;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MainClass extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Fundo fundo;
+	private Passaro passaro;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		fundo = new Fundo();
+		passaro = new Passaro(passaroIniX, screenY/2);
 	}
 
 	@Override
@@ -26,12 +30,14 @@ public class MainClass extends ApplicationAdapter {
 		batch.end();
 	}
 
-	private void update(float time) {
-		fundo.update(time);
+	private void update(float deltaTime) {
+		fundo.update(deltaTime);
+		passaro.update(deltaTime);
 	}
 
 	private void draw() {
 		fundo.draw(batch);
+		passaro.draw(batch);
 	}
 	
 	@Override

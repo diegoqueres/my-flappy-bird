@@ -23,9 +23,9 @@ public class Fundo {
         batch.draw(texture, posX2, 0, screenX, screenY);
     }
 
-    public void update(float time) {
-        posX1 += time * canoVelX;
-        posX2 += time * canoVelX;
+    public void update(float deltaTime) {
+        posX1 += deltaTime * canoVelX;
+        posX2 += deltaTime * canoVelX;
 
         if (posX1 + screenX <= 0) {
             posX1 = screenX;
