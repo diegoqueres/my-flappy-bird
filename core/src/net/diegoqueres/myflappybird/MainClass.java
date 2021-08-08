@@ -22,6 +22,8 @@ public class MainClass extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		input();
+
 		update(Gdx.graphics.getDeltaTime());
 
 		ScreenUtils.clear(1, 0, 0, 1);
@@ -39,10 +41,17 @@ public class MainClass extends ApplicationAdapter {
 		fundo.draw(batch);
 		passaro.draw(batch);
 	}
+
+	private void input() {
+		if (Gdx.input.justTouched()) {
+			passaro.impulso();
+		}
+	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
 		fundo.dispose();
+		passaro.dispose();
 	}
 }
