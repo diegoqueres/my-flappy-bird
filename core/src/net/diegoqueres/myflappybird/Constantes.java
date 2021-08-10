@@ -13,4 +13,6 @@ public class Constantes {
     public static int passaroIniX = (int) (0.2f * screenX);
     public static float acelGravidade = screenY/1.5f;     //gravidade
     public static float impulso = screenY/5f;
+
+    public static int canoWidth = (int) (0.2f * screenX);
 }

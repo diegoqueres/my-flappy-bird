@@ -1,11 +1,13 @@
 package net.diegoqueres.myflappybird;
 
-import static net.diegoqueres.myflappybird.Constantes.*;
+import static net.diegoqueres.myflappybird.Constantes.canoVelX;
+import static net.diegoqueres.myflappybird.Constantes.screenX;
+import static net.diegoqueres.myflappybird.Constantes.screenY;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Fundo {
+public class Fundo implements Elemento {
     private Texture texture;
 
     private float posX1;

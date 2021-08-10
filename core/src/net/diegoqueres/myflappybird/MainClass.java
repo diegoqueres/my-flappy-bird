@@ -1,23 +1,29 @@
 package net.diegoqueres.myflappybird;
 
+import static net.diegoqueres.myflappybird.Cano.POSICAO_CANO;
 import static net.diegoqueres.myflappybird.Constantes.passaroIniX;
 import static net.diegoqueres.myflappybird.Constantes.screenY;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MainClass extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Fundo fundo;
 	private Passaro passaro;
+	private Array<Cano> canos;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		fundo = new Fundo();
 		passaro = new Passaro(passaroIniX, screenY/2);
+		canos = new Array<>();
+
+		canos.add(new Cano(500, 500, true));
 	}
 
 	@Override
@@ -34,11 +40,25 @@ public class MainClass extends ApplicationAdapter {
 
 	private void update(float deltaTime) {
 		fundo.update(deltaTime);
+
+		for (int i = 0; i < canos.size; i++) {
+			canos.get(i).update(deltaTime);
+			if (canos.get(i).getPosicaoCano() == POSICAO_CANO.FORA_TELA) {
+				canos.removeIndex(i);
+				i--;
+			}
+		}
+
 		passaro.update(deltaTime);
 	}
 
 	private void draw() {
 		fundo.draw(batch);
+
+		for (Cano c : canos) {
+			c.draw(batch);
+		}
+
 		passaro.draw(batch);
 	}
 
@@ -51,7 +71,12 @@ public class MainClass extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		fundo.dispose();
-		passaro.dispose();
+		disposeElements(new Elemento[]{fundo, passaro});
+		disposeElements(canos.toArray());
+	}
+
+	private void disposeElements(Elemento[] elementos) {
+		for (Elemento el : elementos)
+			el.dispose();
 	}
 }

@@ -1,13 +1,17 @@
 package net.diegoqueres.myflappybird;
 
-import static net.diegoqueres.myflappybird.Constantes.*;
+import static net.diegoqueres.myflappybird.Constantes.PASSARO_NUM_TEXTURAS;
+import static net.diegoqueres.myflappybird.Constantes.acelGravidade;
+import static net.diegoqueres.myflappybird.Constantes.impulso;
+import static net.diegoqueres.myflappybird.Constantes.passaroRad;
+import static net.diegoqueres.myflappybird.Constantes.screenY;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Passaro {
+public class Passaro implements Elemento {
     public Circle corpo;
 
     private Texture[] frames;
