@@ -15,4 +15,9 @@ public class Constantes {
     public static float impulso = screenY/5f;
 
     public static int canoWidth = (int) (0.2f * screenX);
+
+    public static final float tempoCanos = 3f;
+    public static final float rangePosCano = 0.85f - 0.15f;
+    public static int posMaxCano = (int) (rangePosCano * screenY);
+    public static int gap = (int) (0.2f * screenY);
 }

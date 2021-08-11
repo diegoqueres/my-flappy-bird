@@ -1,8 +1,7 @@
 package net.diegoqueres.myflappybird;
 
 import static net.diegoqueres.myflappybird.Cano.POSICAO_CANO;
-import static net.diegoqueres.myflappybird.Constantes.passaroIniX;
-import static net.diegoqueres.myflappybird.Constantes.screenY;
+import static net.diegoqueres.myflappybird.Constantes.*;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -10,11 +9,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.Random;
+
 public class MainClass extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Fundo fundo;
 	private Passaro passaro;
 	private Array<Cano> canos;
+	private float tempoCano;
 	
 	@Override
 	public void create () {
@@ -22,8 +24,7 @@ public class MainClass extends ApplicationAdapter {
 		fundo = new Fundo();
 		passaro = new Passaro(passaroIniX, screenY/2);
 		canos = new Array<>();
-
-		canos.add(new Cano(500, 500, true));
+		tempoCano = tempoCanos;
 	}
 
 	@Override
@@ -47,6 +48,16 @@ public class MainClass extends ApplicationAdapter {
 				canos.removeIndex(i);
 				i--;
 			}
+		}
+
+		tempoCano -= deltaTime;
+		if (tempoCano <= 0) {
+			Random random = new Random();
+			int pos = random.nextInt(posMaxCano);
+			pos -= posMaxCano/2;
+			canos.add(new Cano(screenX, screenY/2 + pos + gap/2, true));
+			canos.add(new Cano(screenX, screenY/2 + pos - gap/2, false));
+			tempoCano = tempoCanos;
 		}
 
 		passaro.update(deltaTime);
