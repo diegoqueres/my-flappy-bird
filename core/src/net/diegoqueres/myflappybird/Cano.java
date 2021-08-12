@@ -14,7 +14,7 @@ public class Cano implements Elemento {
 
     private Texture tex;
 
-    private Rectangle corpo;
+    public Rectangle corpo;
 
     private boolean posicionadoEncima;
 
@@ -22,10 +22,8 @@ public class Cano implements Elemento {
         this.posicionadoEncima = posicionadoEncima;
         if (posicionadoEncima) {
             corpo = new Rectangle(posX, posY, canoWidth, screenY);
-            Gdx.app.log("Log", "Criando cano encima na pos x=" + posX + ", y=" + posY);
         } else {
             corpo = new Rectangle(posX, posY-screenY, canoWidth, screenY);
-            Gdx.app.log("Log", "Criando cano embaixo na pos x=" + posX + ", y=" + (posY-screenY));
         }
 
         tex = new Texture("cano.png");

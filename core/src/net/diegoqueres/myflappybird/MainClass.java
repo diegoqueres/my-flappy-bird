@@ -6,6 +6,7 @@ import static net.diegoqueres.myflappybird.Constantes.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -58,6 +59,13 @@ public class MainClass extends ApplicationAdapter {
 			canos.add(new Cano(screenX, screenY/2 + pos + gap/2, true));
 			canos.add(new Cano(screenX, screenY/2 + pos - gap/2, false));
 			tempoCano = tempoCanos;
+		}
+
+		for (Cano cano : canos) {
+			if (Intersector.overlaps(passaro.corpo, cano.corpo)) {
+				Gdx.app.log("Log", "Bateeeeuuuuu!");
+				passaro.perdeu();
+			}
 		}
 
 		passaro.update(deltaTime);

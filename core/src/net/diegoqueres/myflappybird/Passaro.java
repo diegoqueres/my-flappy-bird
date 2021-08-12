@@ -2,6 +2,7 @@ package net.diegoqueres.myflappybird;
 
 import static net.diegoqueres.myflappybird.Constantes.PASSARO_NUM_TEXTURAS;
 import static net.diegoqueres.myflappybird.Constantes.acelGravidade;
+import static net.diegoqueres.myflappybird.Constantes.canoVelX;
 import static net.diegoqueres.myflappybird.Constantes.impulso;
 import static net.diegoqueres.myflappybird.Constantes.passaroRad;
 import static net.diegoqueres.myflappybird.Constantes.screenY;
@@ -66,5 +67,15 @@ public class Passaro implements Elemento {
         for (Texture frame : frames) {
             frame.dispose();
         }
+    }
+
+    public void perdeu() {
+        velocidade.x = 2*canoVelX;
+        velocidade.y = 0;
+    }
+
+    public void restart(int posX, int posY) {
+        corpo = new Circle(posX, posY, passaroRad);
+        velocidade = new Vector2(0, 0);
     }
 }
