@@ -1,7 +1,7 @@
 package net.diegoqueres.myflappybird;
 
-import static net.diegoqueres.myflappybird.Cano.POSICAO_CANO;
 import static net.diegoqueres.myflappybird.Constantes.*;
+import static net.diegoqueres.myflappybird.Constantes.ESTADO.*;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -18,6 +18,7 @@ public class MainClass extends ApplicationAdapter {
 	private Passaro passaro;
 	private Array<Cano> canos;
 	private float tempoCano;
+	private ESTADO estadoJogo;
 	
 	@Override
 	public void create () {
@@ -26,6 +27,7 @@ public class MainClass extends ApplicationAdapter {
 		passaro = new Passaro(passaroIniX, screenY/2);
 		canos = new Array<>();
 		tempoCano = tempoCanos;
+		estadoJogo = PARADO;
 	}
 
 	@Override
@@ -41,34 +43,42 @@ public class MainClass extends ApplicationAdapter {
 	}
 
 	private void update(float deltaTime) {
-		fundo.update(deltaTime);
+		if (estadoJogo == RODANDO) {
+			fundo.update(deltaTime);
 
-		for (int i = 0; i < canos.size; i++) {
-			canos.get(i).update(deltaTime);
-			if (canos.get(i).getPosicaoCano() == POSICAO_CANO.FORA_TELA) {
-				canos.removeIndex(i);
-				i--;
+			for (int i = 0; i < canos.size; i++) {
+				canos.get(i).update(deltaTime);
+				if (canos.get(i).getPosicao() == POSICAO.FORA_TELA) {
+					canos.removeIndex(i);
+					i--;
+				}
+			}
+
+			tempoCano -= deltaTime;
+			if (tempoCano <= 0) {
+				Random random = new Random();
+				int pos = random.nextInt(posMaxCano);
+				pos -= posMaxCano / 2;
+				canos.add(new Cano(screenX, screenY / 2 + pos + gap / 2, true));
+				canos.add(new Cano(screenX, screenY / 2 + pos - gap / 2, false));
+				tempoCano = tempoCanos;
+			}
+
+			for (Cano cano : canos) {
+				if (Intersector.overlaps(passaro.corpo, cano.corpo)) {
+					Gdx.app.log("Log", "Bateeeeuuuuu!");
+					passaro.perdeu();
+					estadoJogo = PERDEU;
+				}
 			}
 		}
 
-		tempoCano -= deltaTime;
-		if (tempoCano <= 0) {
-			Random random = new Random();
-			int pos = random.nextInt(posMaxCano);
-			pos -= posMaxCano/2;
-			canos.add(new Cano(screenX, screenY/2 + pos + gap/2, true));
-			canos.add(new Cano(screenX, screenY/2 + pos - gap/2, false));
-			tempoCano = tempoCanos;
-		}
-
-		for (Cano cano : canos) {
-			if (Intersector.overlaps(passaro.corpo, cano.corpo)) {
-				Gdx.app.log("Log", "Bateeeeuuuuu!");
-				passaro.perdeu();
+		if (estadoJogo == RODANDO || estadoJogo == PERDEU) {
+			passaro.update(deltaTime);
+			if (passaro.getPosicao() == POSICAO.FORA_TELA) {
+				estadoJogo = AGUARDANDO_RESTART;
 			}
 		}
-
-		passaro.update(deltaTime);
 	}
 
 	private void draw() {
@@ -83,10 +93,27 @@ public class MainClass extends ApplicationAdapter {
 
 	private void input() {
 		if (Gdx.input.justTouched()) {
-			passaro.impulso();
+			switch (estadoJogo) {
+				case PARADO:
+					estadoJogo = RODANDO;
+					break;
+				case RODANDO:
+					passaro.impulso();
+					break;
+				case AGUARDANDO_RESTART:
+					restart();
+					break;
+			}
 		}
 	}
-	
+
+	private void restart() {
+		estadoJogo = RODANDO;
+		passaro = new Passaro(passaroIniX, screenY/2);
+		canos.clear();
+		tempoCano = tempoCanos;
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();

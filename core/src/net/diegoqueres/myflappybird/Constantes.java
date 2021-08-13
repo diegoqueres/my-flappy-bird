@@ -20,4 +20,7 @@ public class Constantes {
     public static final float rangePosCano = 0.85f - 0.15f;
     public static int posMaxCano = (int) (rangePosCano * screenY);
     public static int gap = (int) (0.2f * screenY);
+
+    public enum ESTADO { PARADO, RODANDO, PERDEU, AGUARDANDO_RESTART }
+    public enum POSICAO { DENTRO_TELA, FORA_TELA }
 }

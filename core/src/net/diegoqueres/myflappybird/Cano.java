@@ -1,8 +1,6 @@
 package net.diegoqueres.myflappybird;
 
-import static net.diegoqueres.myflappybird.Constantes.canoVelX;
-import static net.diegoqueres.myflappybird.Constantes.canoWidth;
-import static net.diegoqueres.myflappybird.Constantes.screenY;
+import static net.diegoqueres.myflappybird.Constantes.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Cano implements Elemento {
-    public enum POSICAO_CANO { DENTRO_TELA, FORA_TELA }
-
     private Texture tex;
 
     public Rectangle corpo;
@@ -38,11 +34,11 @@ public class Cano implements Elemento {
         corpo.x += canoVelX * deltaTime;
     }
 
-    public POSICAO_CANO getPosicaoCano() {
+    public POSICAO getPosicao() {
         if (corpo.x + corpo.getWidth() < 0) {
-            return POSICAO_CANO.FORA_TELA;
+            return POSICAO.FORA_TELA;
         }
-        return POSICAO_CANO.DENTRO_TELA;
+        return POSICAO.DENTRO_TELA;
     }
 
     public void dispose() {

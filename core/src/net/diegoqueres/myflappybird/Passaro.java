@@ -1,11 +1,6 @@
 package net.diegoqueres.myflappybird;
 
-import static net.diegoqueres.myflappybird.Constantes.PASSARO_NUM_TEXTURAS;
-import static net.diegoqueres.myflappybird.Constantes.acelGravidade;
-import static net.diegoqueres.myflappybird.Constantes.canoVelX;
-import static net.diegoqueres.myflappybird.Constantes.impulso;
-import static net.diegoqueres.myflappybird.Constantes.passaroRad;
-import static net.diegoqueres.myflappybird.Constantes.screenY;
+import static net.diegoqueres.myflappybird.Constantes.*;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -57,6 +52,13 @@ public class Passaro implements Elemento {
             corpo.y = 0 + corpo.radius;
             velocidade.y = impulso;
         }
+    }
+
+    public POSICAO getPosicao() {
+        if (corpo.x + corpo.radius <= 0) {
+            return POSICAO.FORA_TELA;
+        }
+        return POSICAO.DENTRO_TELA;
     }
 
     public void impulso() {
