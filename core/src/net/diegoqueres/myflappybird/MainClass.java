@@ -17,8 +17,10 @@ public class MainClass extends ApplicationAdapter {
 	private Fundo fundo;
 	private Passaro passaro;
 	private Array<Cano> canos;
+	private Array<ObjPontos> objPontos;
 	private float tempoCano;
 	private ESTADO estadoJogo;
+	private int pontos;
 	
 	@Override
 	public void create () {
@@ -26,8 +28,10 @@ public class MainClass extends ApplicationAdapter {
 		fundo = new Fundo();
 		passaro = new Passaro(passaroIniX, screenY/2);
 		canos = new Array<>();
+		objPontos = new Array<>();
 		tempoCano = tempoCanos;
 		estadoJogo = PARADO;
+		pontos = 0;
 	}
 
 	@Override
@@ -46,37 +50,64 @@ public class MainClass extends ApplicationAdapter {
 		if (estadoJogo == RODANDO) {
 			fundo.update(deltaTime);
 
-			for (int i = 0; i < canos.size; i++) {
-				canos.get(i).update(deltaTime);
-				if (canos.get(i).getPosicao() == POSICAO.FORA_TELA) {
-					canos.removeIndex(i);
-					i--;
-				}
-			}
-
-			tempoCano -= deltaTime;
-			if (tempoCano <= 0) {
-				Random random = new Random();
-				int pos = random.nextInt(posMaxCano);
-				pos -= posMaxCano / 2;
-				canos.add(new Cano(screenX, screenY / 2 + pos + gap / 2, true));
-				canos.add(new Cano(screenX, screenY / 2 + pos - gap / 2, false));
-				tempoCano = tempoCanos;
-			}
-
-			for (Cano cano : canos) {
-				if (Intersector.overlaps(passaro.corpo, cano.corpo)) {
-					Gdx.app.log("Log", "Bateeeeuuuuu!");
-					passaro.perdeu();
-					estadoJogo = PERDEU;
-				}
-			}
+			atualizaCanos(deltaTime);
+			adicionaNovosCanos(deltaTime);
+			detectaColisaoCanos(deltaTime);
 		}
 
 		if (estadoJogo == RODANDO || estadoJogo == PERDEU) {
 			passaro.update(deltaTime);
 			if (passaro.getPosicao() == POSICAO.FORA_TELA) {
 				estadoJogo = AGUARDANDO_RESTART;
+			}
+		}
+	}
+
+	private void atualizaCanos(float deltaTime) {
+		for (int i = 0; i < canos.size; i++) {
+			canos.get(i).update(deltaTime);
+			if (canos.get(i).getPosicao() == POSICAO.FORA_TELA) {
+				canos.removeIndex(i);
+				i--;
+			}
+		}
+		for (int i = 0; i < objPontos.size; i++) {
+			objPontos.get(i).update(deltaTime);
+			if (objPontos.get(i).getPosicao() == POSICAO.FORA_TELA) {
+				objPontos.removeIndex(i);
+				i--;
+			}
+		}
+	}
+
+	private void adicionaNovosCanos(float deltaTime) {
+		tempoCano -= deltaTime;
+		if (tempoCano <= 0) {
+			Random random = new Random();
+			int pos = random.nextInt(posMaxCano);
+			pos -= posMaxCano / 2;
+			canos.add(new Cano(screenX, screenY / 2 + pos + gap / 2, true));
+			canos.add(new Cano(screenX, screenY / 2 + pos - gap / 2, false));
+			objPontos.add(new ObjPontos(screenX + canoWidth + 2*passaroRad, screenY / 2 + pos - gap / 2));
+			tempoCano = tempoCanos;
+		}
+	}
+
+	private void detectaColisaoCanos(float deltaTime) {
+		for (Cano cano : canos) {
+			if (Intersector.overlaps(passaro.corpo, cano.corpo)) {
+				Gdx.app.log("Log", "Bateeeeuuuuu!");
+				passaro.perdeu();
+				estadoJogo = PERDEU;
+			}
+		}
+		for (int i = 0; i < objPontos.size; i++) {
+			ObjPontos o = objPontos.get(i);
+			if (Intersector.overlaps(passaro.corpo, o.corpo)) {
+				pontos++;
+				Gdx.app.log("Log", "Pontuou. Nova pontuação: " + String.valueOf(pontos));
+				objPontos.removeIndex(i);
+				i--;
 			}
 		}
 	}
@@ -111,6 +142,8 @@ public class MainClass extends ApplicationAdapter {
 		estadoJogo = RODANDO;
 		passaro = new Passaro(passaroIniX, screenY/2);
 		canos.clear();
+		objPontos.clear();
+		pontos = 0;
 		tempoCano = tempoCanos;
 	}
 

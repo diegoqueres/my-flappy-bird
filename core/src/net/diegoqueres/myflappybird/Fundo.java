@@ -20,11 +20,13 @@ public class Fundo implements Elemento {
         posX2 = screenX;
     }
 
+    @Override
     public void draw(SpriteBatch batch) {
         batch.draw(texture, posX1, 0, screenX, screenY);
         batch.draw(texture, posX2, 0, screenX, screenY);
     }
 
+    @Override
     public void update(float deltaTime) {
         posX1 += deltaTime * canoVelX;
         posX2 += deltaTime * canoVelX;
@@ -39,7 +41,12 @@ public class Fundo implements Elemento {
         }
     }
 
+    @Override
     public void dispose() {
         texture.dispose();
+    }
+
+    public Constantes.POSICAO getPosicao() {
+        return null;
     }
 }

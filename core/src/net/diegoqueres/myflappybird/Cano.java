@@ -30,10 +30,16 @@ public class Cano implements Elemento {
                 0, 0, tex.getWidth(), tex.getHeight(), false, isPosicionadoEncima());
     }
 
+    public boolean isPosicionadoEncima() {
+        return posicionadoEncima;
+    }
+
+    @Override
     public void update(float deltaTime) {
         corpo.x += canoVelX * deltaTime;
     }
 
+    @Override
     public POSICAO getPosicao() {
         if (corpo.x + corpo.getWidth() < 0) {
             return POSICAO.FORA_TELA;
@@ -41,11 +47,8 @@ public class Cano implements Elemento {
         return POSICAO.DENTRO_TELA;
     }
 
+    @Override
     public void dispose() {
         tex.dispose();
-    }
-
-    public boolean isPosicionadoEncima() {
-        return posicionadoEncima;
     }
 }

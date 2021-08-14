@@ -26,6 +26,7 @@ public class Passaro implements Elemento {
         velocidade = new Vector2(0, 0);
     }
 
+    @Override
     public void draw(SpriteBatch batch) {
         batch.draw(frames[(int)auxFrames % PASSARO_NUM_TEXTURAS],
                 corpo.x - corpo.radius, corpo.y - corpo.radius,
@@ -33,6 +34,7 @@ public class Passaro implements Elemento {
         );
     }
 
+    @Override
     public void update(float deltaTime) {
         auxFrames += 6 * deltaTime;
 
@@ -54,6 +56,7 @@ public class Passaro implements Elemento {
         }
     }
 
+    @Override
     public POSICAO getPosicao() {
         if (corpo.x + corpo.radius <= 0) {
             return POSICAO.FORA_TELA;
@@ -65,6 +68,7 @@ public class Passaro implements Elemento {
         velocidade.y += impulso;
     }
 
+    @Override
     public void dispose() {
         for (Texture frame : frames) {
             frame.dispose();
