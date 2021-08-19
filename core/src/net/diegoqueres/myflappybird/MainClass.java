@@ -5,7 +5,11 @@ import static net.diegoqueres.myflappybird.Constantes.ESTADO.*;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -21,6 +25,8 @@ public class MainClass extends ApplicationAdapter {
 	private float tempoCano;
 	private ESTADO estadoJogo;
 	private int pontos;
+	private BitmapFont fonte;
+	private GlyphLayout glyphLayout;
 	
 	@Override
 	public void create () {
@@ -32,6 +38,19 @@ public class MainClass extends ApplicationAdapter {
 		tempoCano = tempoCanos;
 		estadoJogo = PARADO;
 		pontos = 0;
+		generateFont();
+	}
+
+	private void generateFont() {
+		FreeTypeFontGenerator.setMaxTextureSize(2048);
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = (int) (0.2f * screenX);
+		parameter.color = Color.WHITE;
+		fonte = generator.generateFont(parameter);
+		generator.dispose();
+
+		glyphLayout = new GlyphLayout();
 	}
 
 	@Override
@@ -120,6 +139,12 @@ public class MainClass extends ApplicationAdapter {
 		}
 
 		passaro.draw(batch);
+
+		String pontuacao = String.valueOf(pontos);
+		float pontuacaoWidth = getTamX(fonte, pontuacao);
+		fonte.draw(batch, pontuacao,
+				(screenX - pontuacaoWidth)/2,
+				0.98f * screenY);
 	}
 
 	private void input() {
@@ -147,9 +172,16 @@ public class MainClass extends ApplicationAdapter {
 		tempoCano = tempoCanos;
 	}
 
+	private float getTamX(BitmapFont fonte, String texto) {
+		glyphLayout.reset();
+		glyphLayout.setText(fonte, texto);
+		return glyphLayout.width;
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();
+		fonte.dispose();
 		disposeElements(new Elemento[]{fundo, passaro});
 		disposeElements(canos.toArray());
 	}
