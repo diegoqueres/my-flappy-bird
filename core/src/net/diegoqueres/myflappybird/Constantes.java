@@ -21,6 +21,13 @@ public class Constantes {
     public static int posMaxCano = (int) (rangePosCano * screenY);
     public static int gap = (int) (0.2f * screenY);
 
+    public static int btnTamanho = (int) (0.4f * screenX);
+    public static int btnX = (int) ((0.6f/2f) * screenX);
+    public static int btnY = (screenY - btnTamanho)/2;
+
+    public static final float volumeSons = 0.9f;
+
     public enum ESTADO { PARADO, RODANDO, PERDEU, AGUARDANDO_RESTART }
     public enum POSICAO { DENTRO_TELA, FORA_TELA }
+    public enum SOM { VOA, BATE, PONTUA }
 }

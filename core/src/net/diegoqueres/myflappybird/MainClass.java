@@ -6,6 +6,7 @@ import static net.diegoqueres.myflappybird.Constantes.ESTADO.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -27,7 +28,10 @@ public class MainClass extends ApplicationAdapter {
 	private int pontos;
 	private BitmapFont fonte;
 	private GlyphLayout glyphLayout;
-	
+	private Botao btnStart;
+	private Botao btnRestart;
+	private Som som;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -39,6 +43,10 @@ public class MainClass extends ApplicationAdapter {
 		estadoJogo = PARADO;
 		pontos = 0;
 		generateFont();
+
+		btnStart = new Botao(new Texture("botoes/BotaoPlay.png"), btnX, btnY, btnTamanho);
+		btnRestart = new Botao(new Texture("botoes/BotaoRestart.png"), btnX, btnY, btnTamanho);
+		som = new Som();
 	}
 
 	private void generateFont() {
@@ -116,6 +124,7 @@ public class MainClass extends ApplicationAdapter {
 		for (Cano cano : canos) {
 			if (Intersector.overlaps(passaro.corpo, cano.corpo)) {
 				Gdx.app.log("Log", "Bateeeeuuuuu!");
+				som.play(SOM.BATE);
 				passaro.perdeu();
 				estadoJogo = PERDEU;
 			}
@@ -125,6 +134,7 @@ public class MainClass extends ApplicationAdapter {
 			if (Intersector.overlaps(passaro.corpo, o.corpo)) {
 				pontos++;
 				Gdx.app.log("Log", "Pontuou. Nova pontuação: " + String.valueOf(pontos));
+				som.play(SOM.PONTUA);
 				objPontos.removeIndex(i);
 				i--;
 			}
@@ -140,6 +150,11 @@ public class MainClass extends ApplicationAdapter {
 
 		passaro.draw(batch);
 
+		drawPontuacao();
+		drawBotoes();
+	}
+
+	private void drawPontuacao() {
 		String pontuacao = String.valueOf(pontos);
 		float pontuacaoWidth = getTamX(fonte, pontuacao);
 		fonte.draw(batch, pontuacao,
@@ -147,18 +162,36 @@ public class MainClass extends ApplicationAdapter {
 				0.98f * screenY);
 	}
 
+	private void drawBotoes() {
+		if (estadoJogo == PARADO)	btnStart.draw(batch);
+		else if (estadoJogo == AGUARDANDO_RESTART)	btnRestart.draw(batch);
+	}
+
 	private void input() {
 		if (Gdx.input.justTouched()) {
+			int x = Gdx.input.getX();
+			int y = screenY - Gdx.input.getY();
+
 			switch (estadoJogo) {
 				case PARADO:
-					estadoJogo = RODANDO;
+					btnStart.setPressed(x, y);
 					break;
 				case RODANDO:
 					passaro.impulso();
+					som.play(SOM.VOA);
 					break;
 				case AGUARDANDO_RESTART:
-					restart();
+					btnRestart.setPressed(x, y);
 					break;
+			}
+		} else {
+			if (btnStart.pressed) {
+				estadoJogo = RODANDO;
+				btnStart.pressed = false;
+			}
+			if (btnRestart.pressed) {
+				restart();
+				btnRestart.pressed = false;
 			}
 		}
 	}
@@ -182,7 +215,8 @@ public class MainClass extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		fonte.dispose();
-		disposeElements(new Elemento[]{fundo, passaro});
+		som.dispose();
+		disposeElements(new Elemento[]{fundo, passaro, btnStart, btnRestart});
 		disposeElements(canos.toArray());
 	}
 
