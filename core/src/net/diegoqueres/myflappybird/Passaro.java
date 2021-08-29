@@ -20,7 +20,7 @@ public class Passaro implements Elemento {
 
         frames = new Texture[PASSARO_NUM_TEXTURAS];
         for (int i=1; i<=PASSARO_NUM_TEXTURAS; i++) {
-            frames[i-1] = new Texture(String.format("felpudo/felpudoVoa%d.png", i));
+            frames[i-1] = new Texture("felpudo/felpudoVoa"+i+".png");
         }
 
         velocidade = new Vector2(0, 0);

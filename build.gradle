@@ -98,6 +98,6 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        
+        compileOnly group: 'com.google.gwt', name: 'gwt-user', version: '2.9.0'
     }
 }

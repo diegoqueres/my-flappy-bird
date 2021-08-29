@@ -3,6 +3,7 @@ package net.diegoqueres.myflappybird;
 import static net.diegoqueres.myflappybird.Constantes.*;
 import static net.diegoqueres.myflappybird.Constantes.ESTADO.*;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -10,10 +11,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.google.gwt.core.shared.GwtIncompatible;
 
 import java.util.Random;
 
@@ -50,15 +51,26 @@ public class MainClass extends ApplicationAdapter {
 	}
 
 	private void generateFont() {
-		FreeTypeFontGenerator.setMaxTextureSize(2048);
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
-		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		if(Gdx.app.getType() != Application.ApplicationType.WebGL) {
+			generateFreeTypeFont();
+		} else {
+			fonte = new BitmapFont(Gdx.files.internal("gwtFont.fnt"));
+		}
+
+		glyphLayout = new GlyphLayout();
+	}
+
+	@GwtIncompatible
+	private void generateFreeTypeFont() {
+		com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.setMaxTextureSize(2048);
+		com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator generator =
+				new com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator(Gdx.files.internal("font.ttf"));
+		com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+				new com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = (int) (0.2f * screenX);
 		parameter.color = Color.WHITE;
 		fonte = generator.generateFont(parameter);
 		generator.dispose();
-
-		glyphLayout = new GlyphLayout();
 	}
 
 	@Override
